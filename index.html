@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>HTML5 API. Webworkers</title>
+    <style>
+	progress{
+    width: 250px;
+    display: block;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="d">Загружено на <span id="s">0</span>%</div>
+  <div>
+    <button id="b">Запустить цикл</button>
+    </div>
+  <progress id="p" value="0" max="100"></progress>
+</body>
+<script type="text/javascript">
+var d = document.getElementById("d");
+var b = document.getElementById('b');
+var s = document.getElementById('s');
+var p = document.getElementById('p');
+b.onclick = function(){
+  var worker = new Worker("worker.js");
+  var self = this;
+  worker.postMessage(100000000);
+  worker.onmessage = function(event){
+    if(event.data.type == 1){
+      d.innerHTML = event.data.msg;
+      self.disabled = "";
+    }else{
+      s.firstChild.nodeValue = event.data.msg;
+      p.value = event.data.msg;
+    }
+  };
+
+  self.disabled = "disabled";
+};
+</script>
+</html>
